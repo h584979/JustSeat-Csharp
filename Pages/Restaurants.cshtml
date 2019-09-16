@@ -1,0 +1,68 @@
+@page
+@model RestaurantModel
+@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<IdentityUser> SignInManager
+    @inject UserManager<IdentityUser> UserManager
+
+
+        <header id="header" class="alt">
+            <a asp-page="/Index">
+                <h1 style="color:#2c3e50;"><strong>Bordbestilling</strong> by Team 10</h1>
+            </a>
+            <nav id="nav">
+                <ul>
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                    <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new {
+                        area="" })" method="post" id="logoutForm" class="navbar-right">
+                        <ul class="nav navbar-nav navbar-right">
+                            <li>
+                                <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Logged in as
+                                    @UserManager.GetUserName(User)!</a>
+                            </li>
+                            <li>
+                                <button type="submit" class="btn btn-link navbar-btn navbar-link">Logg ut</button>
+                            </li>
+                        </ul>
+                    </form>
+                    }
+                    else
+                    {
+                    <li><a asp-area="Identity" asp-page="/Account/Login" class="button small">Logg inn</a></li>
+                    <li><a asp-area="Identity" asp-page="/Account/Register" class="button small">Registrer deg</a></li>
+                    }
+                </ul>
+            </nav>
+        </header>
+
+        <a href="#menu" class="navPanelToggle"><span class="fa fa-bars"></span></a>
+
+        <section id="main" class="wrapper">
+            <div class="container" style="text-align: center;">
+                <h3 class="titleAuth">Restauranter</h3>
+
+                @{
+                var noSted = "";
+                var linkSted = "";
+                if(@ViewData["Sted"]==null) {
+                noSted = "Ditt postnummer støttes ikke enda, dessverre. Se en liste over steder vi støtter ";
+                linkSted = "her.";
+                ViewData["ZipView"] = "";
+                } else {
+                ViewData["lblRes"] = "Viser alle restauranter i området ";
+                }
+                }
+                <h4 style="color:red;text-transform:none;display:hidden;">@noSted<a style="color:grey;"
+                        href="Locations">@linkSted</a></h4>
+                <h4 class="ResTitle">@ViewData["lblRes"]</h4>
+                <h4 class="ResTitle" style="margin-left:5px;">@ViewData["ZipView"] @ViewData["Sted"]</h4>
+                <br>
+                <br>
+
+            </div>
+        </section>
+
+        @section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+        }
